@@ -1,16 +1,11 @@
 import React from "react";
-import {
-  Button,
-  Icon,
-  TextField,
-  Divider,
-  Paper,
-  makeStyles,
-} from "@material-ui/core";
+import { Button, TextField, Paper, makeStyles } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { googleSignInWithPopup } from "firebase-config/google-auth";
 import { useForm } from "hooks/useForm";
-import { signEmailUser } from "firebase-config/email-pass-auth";
+import {
+  createEmailUser,
+  updateProfile,
+} from "firebase-config/email-pass-auth";
 
 const useStyles = makeStyles((theme) => ({
   Loginbutton: {
@@ -31,36 +26,49 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Login = () => {
-  const { formData: loginForm, handleInputChange } = useForm({
-    email: "brendatfigueroa08@gmail.com",
-    password: "123456",
+export const Register = () => {
+  const {
+    formData: registerForm,
+    handleInputChange,
+    reset,
+  } = useForm({
+    name: "",
+    email: "",
+    password: "",
+    repeatedPassword: "",
   });
 
   const classes = useStyles();
 
-  const { email, password } = loginForm;
+  const { name, email, password, repeatedPassword } = registerForm;
 
-  const handleGoogleLogin = async () => {
-    const { user } = await googleSignInWithPopup();
-
-    console.log(`user`, user);
-  };
-
-  const handleLogin = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault();
 
-    signEmailUser(email, password).then(({ user }) => {
+    createEmailUser(email, password).then(async ({ user }) => {
+      await updateProfile(user, { displayName: name });
+
       console.log(`user`, user);
+      reset();
     });
   };
 
   return (
     <Paper className={classes.LoginContainer}>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+      <h2>Register</h2>
+      <form onSubmit={handleRegister}>
         <TextField
-          autoComplete="off"
+          autoComplete="none"
+          className={classes.LoginInput}
+          fullWidth
+          id="name"
+          label="Name"
+          name="name"
+          onChange={handleInputChange}
+          value={name}
+        />
+        <TextField
+          autoComplete="none"
           className={classes.LoginInput}
           fullWidth
           id="email"
@@ -70,43 +78,40 @@ export const Login = () => {
           value={email}
         />
         <TextField
-          autoComplete="off"
+          autoComplete="none"
           className={classes.LoginInput}
           fullWidth
           id="password"
           label="Password"
           name="password"
+          type="password"
           onChange={handleInputChange}
           value={password}
+        />
+        <TextField
+          autoComplete="none"
+          className={classes.LoginInput}
+          fullWidth
+          id="repeatedPassword"
+          label="Repeat your password"
+          name="repeatedPassword"
+          type="password"
+          onChange={handleInputChange}
+          value={repeatedPassword}
         />
         <Button
           className={classes.Loginbutton}
           color="primary"
           fullWidth
-          onClick={handleLogin}
           type="submit"
           variant="contained"
         >
-          Login
+          Register
         </Button>
       </form>
 
-      <Divider variant="middle" />
-
-      <Button
-        className={classes.Loginbutton}
-        color="primary"
-        fullWidth
-        onClick={handleGoogleLogin}
-        startIcon={<Icon className="fab fa-google" />}
-        type="submit"
-        variant="outlined"
-      >
-        Sign in with google
-      </Button>
-
       <div className={classes.LoginFooter}>
-        <Link to="/register">Create an account</Link>
+        <Link to="/login">Already register?</Link>
       </div>
     </Paper>
   );

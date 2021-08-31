@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "firebase-config/app-config";
 
@@ -10,4 +11,4 @@ const createEmailUser = (email, password) =>
 const signEmailUser = (email, password) =>
   signInWithEmailAndPassword(auth, email, password);
 
-export { createEmailUser, signEmailUser };
+export { createEmailUser, signEmailUser, updateProfile };
