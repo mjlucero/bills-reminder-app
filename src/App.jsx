@@ -8,11 +8,9 @@ import "./App.css";
 
 function App() {
   return (
-    <main>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <AppRouter />
-      </MuiPickersUtilsProvider>
-    </main>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <AppRouter />
+    </MuiPickersUtilsProvider>
   );
 }
 
