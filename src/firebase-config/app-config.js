@@ -20,4 +20,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const auth = getAuth();
 
-export { firebaseApp, auth, signOut };
+const authSignOut = () => signOut(auth);
+
+export { firebaseApp, auth, authSignOut };

@@ -17,16 +17,18 @@ export const AppRouter = () => {
   const [isLoggedIn, setisLoggedIn] = useState(false);
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      console.log(`user`, user);
-
+    const authSubscription = onAuthStateChanged(auth, (user) => {
       if (user?.uid) {
         setisLoggedIn(true);
+      } else {
+        setisLoggedIn(false);
       }
 
       setUserChecking(false);
     });
-  }, [setUserChecking]);
+
+    return () => authSubscription();
+  }, []);
 
   if (userChecking) {
     return <CircularProgress />;

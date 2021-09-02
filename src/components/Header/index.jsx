@@ -10,6 +10,7 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
+import { authSignOut } from "firebase-config/app-config";
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -32,6 +33,10 @@ export const Header = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = async () => {
+    await authSignOut();
   };
 
   return (
@@ -76,6 +81,7 @@ export const Header = () => {
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>My account</MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </div>
       </Toolbar>

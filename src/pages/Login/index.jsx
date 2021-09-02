@@ -1,12 +1,13 @@
 import React from "react";
 import {
   Button,
-  Icon,
-  TextField,
+  CircularProgress,
   Divider,
-  Paper,
+  Icon,
   makeStyles,
+  Paper,
   Snackbar,
+  TextField,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { googleSignInWithPopup } from "firebase-config/google-auth";
@@ -15,13 +16,24 @@ import { signEmailUser } from "firebase-config/email-pass-auth";
 import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
+  LoginPageContainer: {
+    alignItems: "center",
+    boxSizing: "border-box",
+    display: "flex",
+    height: "100%",
+    justifyContent: "center",
+    padding: theme.spacing(2),
+  },
+  ButtonSpinner: {
+    marginLeft: theme.spacing(2),
+  },
   Loginbutton: {
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
   },
   LoginInput: {
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(2),
   },
   LoginContainer: {
     padding: theme.spacing(2),
@@ -34,6 +46,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Login = () => {
+  const classes = useStyles();
+
+  const [loginButtonLoading, setLoginButtonLoading] = useState(false);
+  const [googleButtonLoading, setGoogleButtonLoading] = useState(false);
+
   const [snackbarState, setSnackbarState] = useState({
     open: false,
     message: "",
@@ -44,26 +61,45 @@ export const Login = () => {
     password: "123456",
   });
 
-  const classes = useStyles();
-
   const { email, password } = loginForm;
 
-  const handleGoogleLogin = async () => {
-    const { user } = await googleSignInWithPopup();
+  const handleGoogleLogin = () => {
+    setGoogleButtonLoading(true);
 
-    console.log(`user`, user);
+    googleSignInWithPopup()
+      .then(({ user }) => {
+        setGoogleButtonLoading(false);
+      })
+      .catch((err) => {
+        setSnackbarState({
+          open: true,
+          message: err.code,
+        });
+
+        setGoogleButtonLoading(false);
+      });
   };
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setLoginButtonLoading(true);
 
-    signEmailUser(email, password).then(({ user }) => {
-      console.log(`user`, user);
-    });
+    signEmailUser(email, password)
+      .then(({ user }) => {
+        // console.log(`user`, user);
+      })
+      .catch((err) => {
+        setSnackbarState({
+          open: true,
+          message: err.code,
+        });
+
+        setLoginButtonLoading(false);
+      });
   };
 
   return (
-    <>
+    <div className={classes.LoginPageContainer}>
       <Paper className={classes.LoginContainer}>
         <h2>Login</h2>
         <form onSubmit={handleLogin}>
@@ -90,12 +126,16 @@ export const Login = () => {
           <Button
             className={classes.Loginbutton}
             color="primary"
+            disabled={googleButtonLoading || loginButtonLoading}
             fullWidth
             onClick={handleLogin}
             type="submit"
             variant="contained"
           >
             Login
+            {loginButtonLoading && (
+              <CircularProgress className={classes.ButtonSpinner} size={20} />
+            )}
           </Button>
         </form>
 
@@ -104,6 +144,7 @@ export const Login = () => {
         <Button
           className={classes.Loginbutton}
           color="primary"
+          disabled={googleButtonLoading || loginButtonLoading}
           fullWidth
           onClick={handleGoogleLogin}
           startIcon={<Icon className="fab fa-google" />}
@@ -111,6 +152,9 @@ export const Login = () => {
           variant="outlined"
         >
           Sign in with google
+          {googleButtonLoading && (
+            <CircularProgress className={classes.ButtonSpinner} size={20} />
+          )}
         </Button>
 
         <div className={classes.LoginFooter}>
@@ -121,7 +165,9 @@ export const Login = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={snackbarState.open}
         message={snackbarState.message}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarState({ ...snackbarState, open: false })}
       />
-    </>
+    </div>
   );
 };
