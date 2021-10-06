@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   CircularProgress,
@@ -13,7 +13,6 @@ import { Link } from "react-router-dom";
 import { googleSignInWithPopup } from "firebase-config/google-auth";
 import { useForm } from "hooks/useForm";
 import { signEmailUser } from "firebase-config/email-pass-auth";
-import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   LoginPageContainer: {
@@ -23,9 +22,6 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     justifyContent: "center",
     padding: theme.spacing(2),
-  },
-  ButtonSpinner: {
-    marginLeft: theme.spacing(2),
   },
   Loginbutton: {
     marginBottom: theme.spacing(2),
@@ -66,36 +62,28 @@ export const Login = () => {
   const handleGoogleLogin = () => {
     setGoogleButtonLoading(true);
 
-    googleSignInWithPopup()
-      .then(({ user }) => {
-        setGoogleButtonLoading(false);
-      })
-      .catch((err) => {
-        setSnackbarState({
-          open: true,
-          message: err.code,
-        });
-
-        setGoogleButtonLoading(false);
+    googleSignInWithPopup().catch((err) => {
+      setSnackbarState({
+        open: true,
+        message: err.code,
       });
+
+      setGoogleButtonLoading(false);
+    });
   };
 
   const handleLogin = (e) => {
     e.preventDefault();
     setLoginButtonLoading(true);
 
-    signEmailUser(email, password)
-      .then(({ user }) => {
-        // console.log(`user`, user);
-      })
-      .catch((err) => {
-        setSnackbarState({
-          open: true,
-          message: err.code,
-        });
-
-        setLoginButtonLoading(false);
+    signEmailUser(email, password).catch((err) => {
+      setSnackbarState({
+        open: true,
+        message: err.code,
       });
+
+      setLoginButtonLoading(false);
+    });
   };
 
   return (
@@ -132,10 +120,7 @@ export const Login = () => {
             type="submit"
             variant="contained"
           >
-            Login
-            {loginButtonLoading && (
-              <CircularProgress className={classes.ButtonSpinner} size={20} />
-            )}
+            {!loginButtonLoading ? "Login" : <CircularProgress size={20} />}
           </Button>
         </form>
 
@@ -147,13 +132,14 @@ export const Login = () => {
           disabled={googleButtonLoading || loginButtonLoading}
           fullWidth
           onClick={handleGoogleLogin}
-          startIcon={<Icon className="fab fa-google" />}
+          startIcon={!googleButtonLoading && <Icon className="fab fa-google" />}
           type="submit"
           variant="outlined"
         >
-          Sign in with google
-          {googleButtonLoading && (
-            <CircularProgress className={classes.ButtonSpinner} size={20} />
+          {!googleButtonLoading ? (
+            "Sign in with google"
+          ) : (
+            <CircularProgress size={20} />
           )}
         </Button>
 
