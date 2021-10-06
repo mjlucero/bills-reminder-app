@@ -10,6 +10,8 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
+
 import { authSignOut } from "firebase-config/app-config";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+  },
+  link: {
+    textDecoration: "none",
+    color: "white",
   },
 }));
 
@@ -50,8 +56,11 @@ export const Header = () => {
         >
           <MenuIcon />
         </IconButton>
+
         <Typography variant="h6" className={classes.title}>
-          Photos
+          <Link to="/" className={classes.link}>
+            Bills{" "}
+          </Link>
         </Typography>
 
         <div>

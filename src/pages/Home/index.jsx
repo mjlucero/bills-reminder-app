@@ -1,6 +1,8 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Fab } from "@material-ui/core";
+import { Add } from "@material-ui/icons";
 import { Header } from "components/Header";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,9 +18,13 @@ export const Home = () => {
 
   return (
     <div className={classes.root}>
-      <Header />
       <main>
         <h1>Home</h1>
+        <Link to="/bill">
+          <Fab color="primary" aria-label="add">
+            <Add />
+          </Fab>
+        </Link>
       </main>
     </div>
   );
