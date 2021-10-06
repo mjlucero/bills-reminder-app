@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import { CircularProgress } from "@material-ui/core";
 
@@ -11,16 +11,23 @@ import { Login } from "pages/Login";
 import { Register } from "pages/Register";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
+import { UserContext } from "context/UserContext";
 
 export const AppRouter = () => {
+  const { setUser } = useContext(UserContext);
+
   const [userChecking, setUserChecking] = useState(true);
   const [isLoggedIn, setisLoggedIn] = useState(false);
 
   useEffect(() => {
     const authSubscription = onAuthStateChanged(auth, (user) => {
       if (user?.uid) {
+        const { uid, displayName, email, photoURL } = user;
+
+        setUser({ uid, displayName, email, photoURL });
         setisLoggedIn(true);
       } else {
+        setUser(null);
         setisLoggedIn(false);
       }
 
@@ -28,10 +35,14 @@ export const AppRouter = () => {
     });
 
     return () => authSubscription();
-  }, []);
+  }, [setUser]);
 
   if (userChecking) {
-    return <CircularProgress />;
+    return (
+      <div className="flex-centered-container">
+        <CircularProgress />
+      </div>
+    );
   }
 
   return (
