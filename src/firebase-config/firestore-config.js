@@ -1,14 +1,9 @@
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-} from "firebase/firestore/lite";
+import { getFirestore } from "firebase/firestore";
 import { firebaseApp } from "firebase-config/app-config";
 
 const db = getFirestore(firebaseApp);
 
-export { addDoc, db, getDocs, collection };
+export { db };
 
 // async function getCities(db) {
 //   const citiesCol = collection(db, "cities");
