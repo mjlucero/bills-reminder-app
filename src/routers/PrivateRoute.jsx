@@ -1,6 +1,6 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { Redirect, Route } from "react-router-dom";
+import { Header } from "components/Header";
 
 export const PrivateRoute = ({
   isAuthencated,
@@ -11,7 +11,14 @@ export const PrivateRoute = ({
     <Route
       {...rest}
       component={(props) =>
-        isAuthencated ? <Component {...props} /> : <Redirect to="/login" />
+        isAuthencated ? (
+          <div className="page-container">
+            <Header />
+            <Component {...props} />
+          </div>
+        ) : (
+          <Redirect to="/login" />
+        )
       }
     />
   );
