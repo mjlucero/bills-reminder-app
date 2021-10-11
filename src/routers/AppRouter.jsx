@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import { CircularProgress } from "@material-ui/core";
 
