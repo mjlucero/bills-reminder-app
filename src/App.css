@@ -1,7 +1,17 @@
 main {
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   height: 100%;
   padding: 16px;
+}
+
+.page-container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .flex-centered-container {
