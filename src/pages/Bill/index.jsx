@@ -1,24 +1,30 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
-import {
-  Button,
-  TextField,
-  Grid,
-  Paper,
-  makeStyles,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@material-ui/core";
 import { KeyboardDatePicker } from "@material-ui/pickers";
-import { saveBill } from "services/billService";
-import { UserContext } from "context/UserContext";
-import { useForm } from "hooks/useForm";
-import { ItemIcon } from "components/Bills/Item/Icon";
+import { makeStyles } from "@material-ui/core";
+import FormControl from "@material-ui/core/FormControl";
+import Grid from "@material-ui/core/Grid";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Paper from "@material-ui/core/Paper";
+import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
+
+import { ActionButton } from "components/ActionButton";
 import { CATEGORIES_MAPPER } from "config";
+import { ItemIcon } from "components/Bills/Item/Icon";
+import { saveBill } from "services/billService";
+import { SnackbarContext } from "context/SnackbarContext";
+import { useForm } from "hooks/useForm";
+import { UserContext } from "context/UserContext";
 
 const useStyles = makeStyles((theme) => ({
+  billFormContainer: {
+    alignItems: "center",
+    display: "flex",
+    height: "100%",
+    justifyContent: "center",
+  },
   button: {
     marginTop: theme.spacing(2),
   },
@@ -26,12 +32,12 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   input: {
-    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(1),
+    marginTop: theme.spacing(2),
   },
   select: {
-    display: "flex",
     alignItems: "center",
+    display: "flex",
     gap: "4px",
   },
   paper: {
@@ -43,6 +49,9 @@ export const Bill = () => {
   const classes = useStyles();
 
   const { user } = useContext(UserContext);
+  const { setSnackbarState } = useContext(SnackbarContext);
+
+  const [saveBtnLoading, setSaveBtnLoading] = useState(false);
 
   const {
     formData: billForm,
@@ -57,6 +66,10 @@ export const Bill = () => {
 
   const { name, category, expirationDate, amount } = billForm;
 
+  /**
+   *
+   * @param {Date} date
+   */
   const handleDateChange = (date) => {
     handleInputChange({
       target: {
@@ -66,19 +79,33 @@ export const Bill = () => {
     });
   };
 
-  const handleSave = () => {
-    saveBill({
+  /**
+   *
+   * @param {FormDataEvent} e
+   */
+  const handleSave = async (e) => {
+    e.preventDefault();
+
+    setSaveBtnLoading(true);
+
+    await saveBill({
       userId: user.uid,
       name,
       category,
       expirationDate,
       amount,
-    }).then(() => reset());
+    });
+
+    reset();
+
+    setSaveBtnLoading(false);
+
+    setSnackbarState({ open: true, message: `${name} created` });
   };
 
   return (
-    <div className="flex-centered-container">
-      <form autoComplete="off">
+    <div className={classes.billFormContainer}>
+      <form autoComplete="off" onSubmit={handleSave}>
         <Paper className={classes.paper}>
           <h1>Bill</h1>
           <Grid container spacing={2}>
@@ -91,10 +118,11 @@ export const Bill = () => {
                 name="name"
                 onChange={handleInputChange}
                 value={name}
+                required
               />
             </Grid>
             <Grid container item xs={12} sm={6} alignItems="center">
-              <FormControl className={classes.formControl}>
+              <FormControl required className={classes.formControl}>
                 <InputLabel id="category">Category</InputLabel>
                 <Select
                   labelId="category"
@@ -147,15 +175,17 @@ export const Bill = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Button
+              <ActionButton
+                type="submit"
                 className={classes.button}
-                onClick={handleSave}
                 variant="contained"
                 color="primary"
                 fullWidth
+                isLoading={saveBtnLoading}
+                disabled={saveBtnLoading}
               >
                 Save
-              </Button>
+              </ActionButton>
             </Grid>
           </Grid>
         </Paper>

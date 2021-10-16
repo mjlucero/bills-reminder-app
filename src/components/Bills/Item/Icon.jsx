@@ -8,8 +8,11 @@ import { CATEGORIES_MAPPER } from "config";
  * @param {string} props.fontSize
  */
 export const ItemIcon = ({ category, fontSize }) => {
-  return React.createElement(
-    CATEGORIES_MAPPER[category].component || CATEGORIES_MAPPER.other.component,
-    { fontSize: fontSize }
-  );
+  const getCategoryComponent = () => {
+    return CATEGORIES_MAPPER[category]
+      ? CATEGORIES_MAPPER[category].component
+      : CATEGORIES_MAPPER.other.component;
+  };
+
+  return React.createElement(getCategoryComponent(), { fontSize: fontSize });
 };
