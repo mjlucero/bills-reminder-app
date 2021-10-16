@@ -1,19 +1,31 @@
 import { useEffect, useState, useContext } from "react";
 import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
-import { CircularProgress } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "firebase-config/app-config";
-
 import { Bill } from "pages/Bill";
 import { Home } from "pages/Home";
 import { Login } from "pages/Login";
-import { Register } from "pages/Register";
+import { onAuthStateChanged } from "firebase/auth";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
+import { Register } from "pages/Register";
 import { UserContext } from "context/UserContext";
 
+const useStyles = makeStyles(() => ({
+  loaderContainer: {
+    alignItems: "center",
+    display: "flex",
+    height: "100%",
+    justifyContent: "center",
+    width: "100%",
+  },
+}));
+
 export const AppRouter = () => {
+  const classes = useStyles();
+
   const { setUser } = useContext(UserContext);
 
   const [userChecking, setUserChecking] = useState(true);
@@ -39,7 +51,7 @@ export const AppRouter = () => {
 
   if (userChecking) {
     return (
-      <div className="flex-centered-container">
+      <div className={classes.loaderContainer}>
         <CircularProgress />
       </div>
     );
