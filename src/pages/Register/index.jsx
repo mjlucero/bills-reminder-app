@@ -47,7 +47,6 @@ export const Register = () => {
     createEmailUser(email, password).then(async ({ user }) => {
       await updateProfile(user, { displayName: name });
 
-      console.log(`user`, user);
       reset();
     });
   };

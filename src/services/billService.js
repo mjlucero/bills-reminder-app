@@ -1,4 +1,4 @@
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "firebase-config/firestore-config";
 
 /**
@@ -13,10 +13,9 @@ export const saveBill = async (billData) => {
   const newBill = { ...billData, paid: false };
 
   try {
-    const docRef = await addDoc(collection(db, billData.userId), {
+    await addDoc(collection(db, billData.userId), {
       ...newBill,
     });
-    console.log("docRef: ", docRef);
   } catch (e) {
     console.error("Error adding document: ", e);
   }

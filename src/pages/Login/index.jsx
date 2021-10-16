@@ -1,18 +1,17 @@
-import { useState } from "react";
-import {
-  Button,
-  CircularProgress,
-  Divider,
-  Icon,
-  makeStyles,
-  Paper,
-  Snackbar,
-  TextField,
-} from "@material-ui/core";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Divider from "@material-ui/core/Divider";
+import Icon from "@material-ui/core/Icon";
+import Paper from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
+
 import { googleSignInWithPopup } from "firebase-config/google-auth";
-import { useForm } from "hooks/useForm";
 import { signEmailUser } from "firebase-config/email-pass-auth";
+import { SnackbarContext } from "context/SnackbarContext";
+import { useForm } from "hooks/useForm";
 
 const useStyles = makeStyles((theme) => ({
   LoginPageContainer: {
@@ -44,13 +43,10 @@ const useStyles = makeStyles((theme) => ({
 export const Login = () => {
   const classes = useStyles();
 
+  const { setSnackbarState } = useContext(SnackbarContext);
+
   const [loginButtonLoading, setLoginButtonLoading] = useState(false);
   const [googleButtonLoading, setGoogleButtonLoading] = useState(false);
-
-  const [snackbarState, setSnackbarState] = useState({
-    open: false,
-    message: "",
-  });
 
   const { formData: loginForm, handleInputChange } = useForm({
     email: "brendatfigueroa08@gmail.com",
@@ -147,13 +143,6 @@ export const Login = () => {
           <Link to="/register">Create an account</Link>
         </div>
       </Paper>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={snackbarState.open}
-        message={snackbarState.message}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarState({ ...snackbarState, open: false })}
-      />
     </div>
   );
 };

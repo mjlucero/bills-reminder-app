@@ -6,15 +6,12 @@ import { BillsListItem } from "components/Bills/Item";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
-    flex: 1,
     backgroundColor: theme.palette.background.paper,
   },
 }));
 
 export const BillsList = ({ bills }) => {
   const classes = useStyles();
-  console.log(`bills`, bills);
 
   return (
     <List className={classes.root}>
