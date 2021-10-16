@@ -6,13 +6,17 @@ import { Add } from "@material-ui/icons";
 import { getBills } from "services/billService";
 import { UserContext } from "context/UserContext";
 import { BillsList } from "components/Bills/List";
+import { BillsListLoader } from "components/Bills/List/BillsListLoader";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  homeContainer: {
     display: "flex",
-    boxSizing: "border-box",
     flexDirection: "column",
     height: "100%",
+  },
+  listContainer: {
+    flex: 1,
+    overflow: "auto",
   },
   addButtonContainer: {
     display: "flex",
@@ -32,26 +36,28 @@ export const Home = () => {
   const { user } = useContext(UserContext);
 
   const [unpaidBills, setUnpaidBills] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getBills(user.uid).then((bills) => {
       setUnpaidBills(bills);
+      setIsLoading(false);
     });
   }, [user.uid]);
 
   return (
-    <div className={classes.root}>
-      <main>
-        <h1>Home</h1>
-        <BillsList bills={unpaidBills} />
-        <div className={classes.addButtonContainer}>
-          <Link to="/bill" className={classes.addButton}>
-            <Fab color="primary" aria-label="add">
-              <Add />
-            </Fab>
-          </Link>
-        </div>
-      </main>
+    <div className={classes.homeContainer}>
+      <h1>Home</h1>
+      <div className={classes.listContainer}>
+        {isLoading ? <BillsListLoader /> : <BillsList bills={unpaidBills} />}
+      </div>
+      <div className={classes.addButtonContainer}>
+        <Link to="/bill" className={classes.addButton}>
+          <Fab color="primary" aria-label="add">
+            <Add />
+          </Fab>
+        </Link>
+      </div>
     </div>
   );
 };
