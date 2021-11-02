@@ -16,6 +16,7 @@ const useStyles = makeStyles(() => ({
  *
  * @param {Object} props
  * @param {Object} props.bill
+ * @param {Function} props.onItemClick
  * @param {string} props.bill.uid
  * @param {string} props.bill.amount
  * @param {string} props.bill.category
@@ -24,7 +25,7 @@ const useStyles = makeStyles(() => ({
  * @param {boolean} props.bill.paid
  *
  */
-export const BillsListItem = ({ bill }) => {
+export const BillsListItem = ({ bill, onItemClick }) => {
   const classes = useStyles();
 
   /**
@@ -36,8 +37,12 @@ export const BillsListItem = ({ bill }) => {
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
+  const itemClick = () => {
+    onItemClick(bill);
+  };
+
   return (
-    <ListItem button key={bill.uid}>
+    <ListItem button key={bill.uid} onClick={itemClick}>
       <ListItemIcon>
         <ItemIcon category={bill.category} />
       </ListItemIcon>

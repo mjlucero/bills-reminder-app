@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
   },
   listContainer: {
+    backgroundColor: theme.palette.background.paper,
     flex: 1,
     overflow: "auto",
   },
@@ -35,21 +36,38 @@ export const Home = () => {
 
   const { user } = useContext(UserContext);
 
-  const [unpaidBills, setUnpaidBills] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [unpaidBills, setUnpaidBills] = useState({
+    isLoading: true,
+    bills: [],
+  });
 
   useEffect(() => {
     getBills(user.uid).then((bills) => {
-      setUnpaidBills(bills);
-      setIsLoading(false);
+      setUnpaidBills({
+        isLoading: false,
+        bills,
+      });
     });
   }, [user.uid]);
+
+  const handleBillChange = (bill) => {
+    if (bill.paid) {
+      const filteredBills = unpaidBills.bills.filter((b) => b.uid !== bill.uid);
+      setUnpaidBills({ ...unpaidBills, bills: filteredBills });
+    }
+  };
+
+  const { isLoading, bills } = unpaidBills;
 
   return (
     <div className={classes.homeContainer}>
       <h1>Home</h1>
       <div className={classes.listContainer}>
-        {isLoading ? <BillsListLoader /> : <BillsList bills={unpaidBills} />}
+        {isLoading ? (
+          <BillsListLoader />
+        ) : (
+          <BillsList bills={bills} handleBillChange={handleBillChange} />
+        )}
       </div>
       <div className={classes.addButtonContainer}>
         <Link to="/bill" className={classes.addButton}>

@@ -1,5 +1,15 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "firebase-config/firestore-config";
+import { COLLECTION_NAME } from "firebase-config/app-config";
 
 /**
  *
@@ -13,7 +23,7 @@ export const saveBill = async (billData) => {
   const newBill = { ...billData, paid: false };
 
   try {
-    await addDoc(collection(db, billData.userId), {
+    await addDoc(collection(db, COLLECTION_NAME), {
       ...newBill,
     });
   } catch (e) {
@@ -25,7 +35,22 @@ export const saveBill = async (billData) => {
  * @param {string} userId
  */
 export const getBills = async (userId) => {
-  const q = query(collection(db, userId), where("paid", "==", false));
+  const today = new Date();
+
+  const month = today.getMonth();
+  const year = today.getFullYear();
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+
+  const q = query(
+    collection(db, COLLECTION_NAME),
+    where("paid", "==", false),
+    where("userId", "==", userId),
+    where("expirationDate", ">=", firstDay),
+    where("expirationDate", "<=", lastDay),
+    orderBy("expirationDate", "asc")
+  );
 
   const querySnapshot = await getDocs(q);
 
@@ -37,5 +62,16 @@ export const getBills = async (userId) => {
       ...docData,
       expirationDate: docData.expirationDate.toDate(),
     };
+  });
+};
+
+/**
+ * @param {string} billId
+ */
+export const updateBill = async (billId) => {
+  const billRef = doc(db, COLLECTION_NAME, billId);
+
+  return await updateDoc(billRef, {
+    paid: true,
   });
 };

@@ -2,6 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signOut } from "firebase/auth";
 
+const COLLECTION_NAME = "bills";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -22,4 +24,4 @@ const auth = getAuth();
 
 const authSignOut = () => signOut(auth);
 
-export { firebaseApp, auth, authSignOut };
+export { firebaseApp, auth, authSignOut, COLLECTION_NAME };
