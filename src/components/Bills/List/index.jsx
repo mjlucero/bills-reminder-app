@@ -1,15 +1,21 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
+import Typography from "@material-ui/core/Typography";
 
 import { BillsListItem } from "components/Bills/Item";
 import { PayDialog } from "components/PayDialog";
-import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     height: "100%",
+    width: "100%",
+  },
+  noDataText: {
+    textAlign: "center",
+    padding: "0 8px",
   },
 }));
 
@@ -18,6 +24,12 @@ const initialDialogState = {
   bill: {},
 };
 
+/**
+ *
+ * @param {Object} props
+ * @param {array} props.bills
+ * @returns
+ */
 export const BillsList = ({ bills, handleBillChange }) => {
   const classes = useStyles();
 
@@ -42,11 +54,23 @@ export const BillsList = ({ bills, handleBillChange }) => {
 
   return (
     <>
-      <List className={classes.root}>
-        {bills.map((bill) => (
-          <BillsListItem key={bill.uid} bill={bill} onItemClick={onItemClick} />
-        ))}
-      </List>
+      {bills.length ? (
+        <List className={classes.root}>
+          {bills.map((bill) => (
+            <BillsListItem
+              key={bill.uid}
+              bill={bill}
+              onItemClick={onItemClick}
+            />
+          ))}
+        </List>
+      ) : (
+        <Typography className={classes.noDataText}>
+          There are no items to display, try adding one using the button below
+          :D
+        </Typography>
+      )}
+
       <PayDialog open={open} bill={bill} onClose={onDialogClose} />
     </>
   );

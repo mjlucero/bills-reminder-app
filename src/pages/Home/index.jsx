@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles, Fab } from "@material-ui/core";
 import { Add } from "@material-ui/icons";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { getBills } from "services/billService";
 import { UserContext } from "context/UserContext";
 import { BillsList } from "components/Bills/List";
-import { BillsListLoader } from "components/Bills/List/BillsListLoader";
 
 const useStyles = makeStyles((theme) => ({
   homeContainer: {
@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     flex: 1,
     overflow: "auto",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   addButtonContainer: {
     display: "flex",
@@ -64,7 +67,7 @@ export const Home = () => {
       <h1>Home</h1>
       <div className={classes.listContainer}>
         {isLoading ? (
-          <BillsListLoader />
+          <CircularProgress size="100px" />
         ) : (
           <BillsList bills={bills} handleBillChange={handleBillChange} />
         )}
