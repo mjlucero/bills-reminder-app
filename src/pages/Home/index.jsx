@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
 
 import Add from "@material-ui/icons/Add";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -13,31 +12,7 @@ import { BillsList } from "components/Bills/List";
 import { BillsFilters } from "components/Bills/Filters";
 import { unpaid } from "constants/paidTypes";
 
-const useStyles = makeStyles((theme) => ({
-  homeContainer: {
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-  },
-  listContainer: {
-    backgroundColor: theme.palette.background.paper,
-    flex: 1,
-    overflow: "auto",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  addButtonContainer: {
-    display: "flex",
-    justifyContent: "flex-end",
-    marginTop: theme.spacing(2),
-    width: "100%",
-  },
-  addButton: {
-    height: "56px",
-    width: "56px",
-  },
-}));
+import { useStyles } from "./styles";
 
 export const Home = () => {
   const today = new Date();
@@ -54,17 +29,21 @@ export const Home = () => {
 
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
 
+  const [selectedYear, setSelectedYear] = useState(today.getFullYear());
+
   const [selectedPaidType, setSelectedPaidType] = useState(unpaid);
 
   useEffect(() => {
     setLoading(true);
 
-    getBills(user.uid, selectedMonth, selectedPaidType).then((bills) => {
-      setBills(bills);
-      setBillsTotal(bills);
-      setLoading(false);
-    });
-  }, [user.uid, selectedMonth, selectedPaidType]);
+    getBills(user.uid, selectedMonth, selectedYear, selectedPaidType).then(
+      (bills) => {
+        setBills(bills);
+        setBillsTotal(bills);
+        setLoading(false);
+      }
+    );
+  }, [user.uid, selectedMonth, selectedYear, selectedPaidType]);
 
   const handleBillChange = (bill) => {
     if (bill.paid) {
@@ -87,14 +66,17 @@ export const Home = () => {
       <h1>Home</h1>
       <BillsFilters
         selectedMonth={selectedMonth}
-        setSelectedMonth={setSelectedMonth}
         selectedPaidType={selectedPaidType}
+        selectedYear={selectedYear}
+        setSelectedMonth={setSelectedMonth}
         setSelectedPaidType={setSelectedPaidType}
+        setSelectedYear={setSelectedYear}
       />
 
       <Typography className={classes.totalText} variant="h6" component="h2">
         Total ${total}
       </Typography>
+
       <div className={classes.listContainer}>
         {loading ? (
           <CircularProgress size="100px" />

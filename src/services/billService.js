@@ -35,18 +35,12 @@ export const saveBill = async (billData) => {
 /**
  * @param {string} userId
  * @param {number} month
+ * @param {number} year
  * @param {string} paidType
  */
-export const getBills = async (userId, month, paidType = unpaid) => {
-  const today = new Date();
-
-  const selectedMonth = month || today.getMonth();
-
-  const year = today.getFullYear();
-
-  const firstDay = new Date(year, selectedMonth, 1);
-  const lastDay = new Date(year, selectedMonth + 1, 0);
-
+export const getBills = async (userId, month, year, paidType = unpaid) => {
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
   const queryConstraints = [];
 
   if (paidType !== all) {
