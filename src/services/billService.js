@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "firebase-config/firestore-config";
 import { COLLECTION_NAME } from "firebase-config/app-config";
+import { all, unpaid } from "constants/paidTypes";
 
 /**
  *
@@ -33,19 +34,30 @@ export const saveBill = async (billData) => {
 
 /**
  * @param {string} userId
+ * @param {number} month
+ * @param {string} paidType
  */
-export const getBills = async (userId) => {
+export const getBills = async (userId, month, paidType = unpaid) => {
   const today = new Date();
 
-  const month = today.getMonth();
+  const selectedMonth = month || today.getMonth();
+
   const year = today.getFullYear();
 
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
+  const firstDay = new Date(year, selectedMonth, 1);
+  const lastDay = new Date(year, selectedMonth + 1, 0);
+
+  const queryConstraints = [];
+
+  if (paidType !== all) {
+    queryConstraints.push(
+      where("paid", "==", paidType === unpaid ? false : true)
+    );
+  }
 
   const q = query(
     collection(db, COLLECTION_NAME),
-    where("paid", "==", false),
+    ...queryConstraints,
     where("userId", "==", userId),
     where("expirationDate", ">=", firstDay),
     where("expirationDate", "<=", lastDay),

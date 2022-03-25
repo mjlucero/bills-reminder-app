@@ -1,12 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { makeStyles, Fab } from "@material-ui/core";
-import { Add } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
+
+import Add from "@material-ui/icons/Add";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Fab from "@material-ui/core/Fab";
+import Typography from "@material-ui/core/Typography";
 
 import { getBills } from "services/billService";
 import { UserContext } from "context/UserContext";
 import { BillsList } from "components/Bills/List";
+import { BillsFilters } from "components/Bills/Filters";
+import { unpaid } from "constants/paidTypes";
 
 const useStyles = makeStyles((theme) => ({
   homeContainer: {
@@ -35,38 +40,63 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export const Home = () => {
+  const today = new Date();
+
   const classes = useStyles();
 
   const { user } = useContext(UserContext);
 
-  const [unpaidBills, setUnpaidBills] = useState({
-    isLoading: true,
-    bills: [],
-  });
+  const [loading, setLoading] = useState(true);
+
+  const [bills, setBills] = useState([]);
+
+  const [total, setTotal] = useState(0);
+
+  const [selectedMonth, setSelectedMonth] = useState(today.getMonth());
+
+  const [selectedPaidType, setSelectedPaidType] = useState(unpaid);
 
   useEffect(() => {
-    getBills(user.uid).then((bills) => {
-      setUnpaidBills({
-        isLoading: false,
-        bills,
-      });
+    setLoading(true);
+
+    getBills(user.uid, selectedMonth, selectedPaidType).then((bills) => {
+      setBills(bills);
+      setBillsTotal(bills);
+      setLoading(false);
     });
-  }, [user.uid]);
+  }, [user.uid, selectedMonth, selectedPaidType]);
 
   const handleBillChange = (bill) => {
     if (bill.paid) {
-      const filteredBills = unpaidBills.bills.filter((b) => b.uid !== bill.uid);
-      setUnpaidBills({ ...unpaidBills, bills: filteredBills });
+      const filteredBills = bills.filter((b) => b.uid !== bill.uid);
+      setBills(filteredBills);
     }
   };
 
-  const { isLoading, bills } = unpaidBills;
+  const setBillsTotal = (bills) => {
+    const total = bills.reduce(
+      (prev, curr) => prev + parseFloat(curr.amount),
+      0
+    );
+
+    setTotal(total.toFixed(2));
+  };
 
   return (
     <div className={classes.homeContainer}>
       <h1>Home</h1>
+      <BillsFilters
+        selectedMonth={selectedMonth}
+        setSelectedMonth={setSelectedMonth}
+        selectedPaidType={selectedPaidType}
+        setSelectedPaidType={setSelectedPaidType}
+      />
+
+      <Typography className={classes.totalText} variant="h6" component="h2">
+        Total ${total}
+      </Typography>
       <div className={classes.listContainer}>
-        {isLoading ? (
+        {loading ? (
           <CircularProgress size="100px" />
         ) : (
           <BillsList bills={bills} handleBillChange={handleBillChange} />
