@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 
 import { KeyboardDatePicker } from "@material-ui/pickers";
-import { makeStyles } from "@material-ui/core";
+
 import FormControl from "@material-ui/core/FormControl";
 import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -18,35 +18,10 @@ import { SnackbarContext } from "context/SnackbarContext";
 import { useForm } from "hooks/useForm";
 import { UserContext } from "context/UserContext";
 
-const useStyles = makeStyles((theme) => ({
-  billFormContainer: {
-    alignItems: "center",
-    display: "flex",
-    height: "100%",
-    justifyContent: "center",
-  },
-  button: {
-    marginTop: theme.spacing(2),
-  },
-  formControl: {
-    width: "100%",
-  },
-  input: {
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(2),
-  },
-  select: {
-    alignItems: "center",
-    display: "flex",
-    gap: "4px",
-  },
-  paper: {
-    padding: theme.spacing(2),
-  },
-}));
+import { useBillStyles } from "./useBillStyles";
 
 export const Bill = () => {
-  const classes = useStyles();
+  const classes = useBillStyles();
 
   const { user } = useContext(UserContext);
   const { setSnackbarState } = useContext(SnackbarContext);
@@ -125,11 +100,12 @@ export const Bill = () => {
               <FormControl required className={classes.formControl}>
                 <InputLabel id="category">Category</InputLabel>
                 <Select
-                  labelId="category"
+                  className={classes.selectContainer}
                   id="category-select"
+                  labelId="category"
                   name="category"
-                  value={category}
                   onChange={handleInputChange}
+                  value={category}
                   renderValue={(value) => (
                     <div className={classes.select}>
                       <ItemIcon category={value} fontSize="small" />
@@ -147,6 +123,7 @@ export const Bill = () => {
             </Grid>
             <Grid container item xs={12} sm={6} alignItems="center">
               <KeyboardDatePicker
+                autoOk
                 disableToolbar
                 format="do LLL"
                 fullWidth
