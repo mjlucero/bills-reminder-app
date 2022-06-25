@@ -1,4 +1,4 @@
-import { Button, TextField, Paper, makeStyles } from "@material-ui/core";
+import { Button, TextField, Paper } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useForm } from "hooks/useForm";
 import {
@@ -6,24 +6,7 @@ import {
   updateProfile,
 } from "firebase-config/email-pass-auth";
 
-const useStyles = makeStyles((theme) => ({
-  Loginbutton: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  LoginInput: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-  },
-  LoginContainer: {
-    padding: theme.spacing(2),
-  },
-  LoginFooter: {
-    display: "flex",
-    justifyContent: "flex-end",
-    marginTop: theme.spacing(1),
-  },
-}));
+import { useRegisterStyles } from "./useRegisterStyles";
 
 export const Register = () => {
   const {
@@ -37,7 +20,7 @@ export const Register = () => {
     repeatedPassword: "",
   });
 
-  const classes = useStyles();
+  const classes = useRegisterStyles();
 
   const { name, email, password, repeatedPassword } = registerForm;
 

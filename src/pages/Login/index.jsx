@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Divider from "@material-ui/core/Divider";
@@ -13,35 +12,10 @@ import { signEmailUser } from "firebase-config/email-pass-auth";
 import { SnackbarContext } from "context/SnackbarContext";
 import { useForm } from "hooks/useForm";
 
-const useStyles = makeStyles((theme) => ({
-  LoginPageContainer: {
-    alignItems: "center",
-    boxSizing: "border-box",
-    display: "flex",
-    height: "100%",
-    justifyContent: "center",
-    padding: theme.spacing(2),
-  },
-  Loginbutton: {
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(2),
-  },
-  LoginInput: {
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(2),
-  },
-  LoginContainer: {
-    padding: theme.spacing(2),
-  },
-  LoginFooter: {
-    display: "flex",
-    justifyContent: "flex-end",
-    marginTop: theme.spacing(1),
-  },
-}));
+import { useLoginStyles } from "./useLoginStyles";
 
 export const Login = () => {
-  const classes = useStyles();
+  const classes = useLoginStyles();
 
   const { setSnackbarState } = useContext(SnackbarContext);
 
@@ -49,8 +23,8 @@ export const Login = () => {
   const [googleButtonLoading, setGoogleButtonLoading] = useState(false);
 
   const { formData: loginForm, handleInputChange } = useForm({
-    email: "brendatfigueroa08@gmail.com",
-    password: "123456",
+    email: "",
+    password: "",
   });
 
   const { email, password } = loginForm;

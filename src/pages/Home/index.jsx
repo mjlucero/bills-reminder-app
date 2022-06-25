@@ -12,12 +12,12 @@ import { BillsList } from "components/Bills/List";
 import { BillsFilters } from "components/Bills/Filters";
 import { unpaid } from "constants/paidTypes";
 
-import { useStyles } from "./styles";
+import { useHomeStyles } from "./useHomeStyles";
 
 export const Home = () => {
   const today = new Date();
 
-  const classes = useStyles();
+  const classes = useHomeStyles();
 
   const { user } = useContext(UserContext);
 

@@ -1,16 +1,10 @@
-import { makeStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 
 import { ItemIcon } from "components/Bills/Item/Icon";
-
-const useStyles = makeStyles(() => ({
-  inline: {
-    display: "inline",
-  },
-}));
+import { useItemStyles } from "./useItemStyles";
 
 /**
  *
@@ -26,7 +20,7 @@ const useStyles = makeStyles(() => ({
  *
  */
 export const BillsListItem = ({ bill, onItemClick }) => {
-  const classes = useStyles();
+  const classes = useItemStyles();
 
   /**
    *

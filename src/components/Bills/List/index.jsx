@@ -1,23 +1,12 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 
 import { BillsListItem } from "components/Bills/Item";
 import { PayDialog } from "components/PayDialog";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    height: "100%",
-    width: "100%",
-  },
-  noDataText: {
-    textAlign: "center",
-    padding: "0 8px",
-  },
-}));
+import { useListStyles } from "./useListStyles";
 
 const initialDialogState = {
   open: false,
@@ -31,7 +20,7 @@ const initialDialogState = {
  * @returns
  */
 export const BillsList = ({ bills, handleBillChange }) => {
-  const classes = useStyles();
+  const classes = useListStyles();
 
   const [dialogState, setDialogState] = useState(initialDialogState);
 

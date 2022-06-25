@@ -1,7 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-import { makeStyles } from "@material-ui/styles";
 import Backdrop from "@material-ui/core/Backdrop";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -14,24 +13,10 @@ import IconButton from "@material-ui/core/IconButton";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 
 import { updateBill } from "services/billService";
-
-const useStyles = makeStyles((theme) => ({
-  inputContainer: {
-    display: "flex",
-    justifyContent: "center",
-    width: "100%",
-  },
-  input: {
-    display: "none",
-  },
-  backdrop: {
-    zIndex: 1301,
-    color: "#fff",
-  },
-}));
+import { usePayDialogStyles } from "./usePayDialogStyles";
 
 export const PayDialog = ({ onClose, open, bill }) => {
-  const classes = useStyles();
+  const classes = usePayDialogStyles();
 
   const [showBackdrop, setShowBackdrop] = useState(false);
 
