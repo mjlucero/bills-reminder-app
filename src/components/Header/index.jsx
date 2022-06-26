@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import AppBar from "@material-ui/core/AppBar";
@@ -15,6 +15,7 @@ import { useHeaderStyles } from "./useHeaderStyles";
 
 export const Header = () => {
   const classes = useHeaderStyles();
+  const history = useHistory();
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -29,6 +30,7 @@ export const Header = () => {
 
   const handleLogout = async () => {
     await authSignOut();
+    history.push("/login");
   };
 
   return (

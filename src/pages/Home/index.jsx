@@ -34,16 +34,18 @@ export const Home = () => {
   const [selectedPaidType, setSelectedPaidType] = useState(unpaid);
 
   useEffect(() => {
-    setLoading(true);
+    if (user) {
+      setLoading(true);
 
-    getBills(user.uid, selectedMonth, selectedYear, selectedPaidType).then(
-      (bills) => {
-        setBills(bills);
-        setBillsTotal(bills);
-        setLoading(false);
-      }
-    );
-  }, [user.uid, selectedMonth, selectedYear, selectedPaidType]);
+      getBills(user.uid, selectedMonth, selectedYear, selectedPaidType).then(
+        (bills) => {
+          setBills(bills);
+          setBillsTotal(bills);
+          setLoading(false);
+        }
+      );
+    }
+  }, [user, selectedMonth, selectedYear, selectedPaidType]);
 
   const handleBillChange = (bill) => {
     if (bill.paid) {
