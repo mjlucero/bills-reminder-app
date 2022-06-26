@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from "react";
 import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
-import { makeStyles } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { auth } from "firebase-config/app-config";
@@ -12,19 +11,10 @@ import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
 import { Register } from "pages/Register";
 import { UserContext } from "context/UserContext";
-
-const useStyles = makeStyles(() => ({
-  loaderContainer: {
-    alignItems: "center",
-    display: "flex",
-    height: "100%",
-    justifyContent: "center",
-    width: "100%",
-  },
-}));
+import { useAppRouterStyles } from "./useAppRouterStyles";
 
 export const AppRouter = () => {
-  const classes = useStyles();
+  const classes = useAppRouterStyles();
 
   const { setUser } = useContext(UserContext);
 

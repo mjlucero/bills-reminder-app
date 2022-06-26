@@ -15,7 +15,7 @@ import Typography from "@material-ui/core/Typography";
 import { all, unpaid, paid } from "constants/paidTypes";
 import { MONTHS } from "constants/months";
 
-import { useStyles } from "./styles";
+import { useBillsFiltersStyles } from "./useBillsFiltersStyles";
 
 export const BillsFilters = ({
   selectedMonth,
@@ -25,7 +25,7 @@ export const BillsFilters = ({
   setSelectedPaidType,
   setSelectedYear,
 }) => {
-  const classes = useStyles();
+  const classes = useBillsFiltersStyles();
 
   const getYearsList = () => {
     const yearsList = [];
